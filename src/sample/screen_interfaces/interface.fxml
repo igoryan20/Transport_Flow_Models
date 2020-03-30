@@ -6,19 +6,23 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.Controller"
-    fx:id="gridPane">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+<VBox fx:id="gridPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controllers.ModelsController">
    <children>
+       <MenuBar fx:id="menuBar" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
+           <Menu fx:id="menuModels" text="Модели">
+               <MenuItem fx:id="greenbergItem" onAction="#buildGreenbergModels" text="Модели Гринберга" />
+           </Menu>
+           <Menu fx:id="menuTheory" text="Теория">
+               <MenuItem fx:id="greenbergTheory" onAction="#swithcToGreenbergModelsTheory" text="Модели Гринберга" />
+           </Menu>
+           <Menu fx:id="menuExamples" text="Примеры">
+               <MenuItem onAction="#switchToExamples" text="Пример 1" />
+           </Menu>
+           <Menu fx:id="menuLanguage" text="Язык">
+               <MenuItem fx:id="rusLangItem" onAction="#changeToRus" text="Русский" />
+               <MenuItem fx:id="enLangItem" onAction="#changeToEng" text="Английский" />
+           </Menu>
+       </MenuBar>
       <LineChart id="lwr_model_chart" fx:id="lwr_model_chart" stylesheets="@../chart-line-symbol.css" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
         <xAxis>
           <NumberAxis side="BOTTOM" fx:id="xAxis" />
@@ -39,18 +43,5 @@
             <Insets />
          </GridPane.margin>
       </LineChart>
-       <MenuBar fx:id="menuBar" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2">
-           <Menu fx:id="menuModels" text="Модели">
-               <MenuItem fx:id="greenbergItem" onAction="#buildGreenbergModels" text="Модели Гринберга" />
-           </Menu>
-           <Menu text="Теория" fx:id="menuTheory">
-               <MenuItem text="Модели Гринберга" fx:id="greenbergTheory" onAction="#showGreenbergModelsTheory"/>
-           </Menu>
-           <Menu text="Примеры" fx:id="menuExamples"/>
-           <Menu text="Язык" fx:id="menuLanguage">
-               <MenuItem text="Русский" fx:id="rusLangItem" onAction="#changeToRus" />
-               <MenuItem text="Английский" fx:id="enLangItem" onAction="#changeToEng" />
-           </Menu>
-       </MenuBar>
    </children>
-</GridPane>
+</VBox>

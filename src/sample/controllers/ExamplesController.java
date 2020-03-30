@@ -1,27 +1,11 @@
 package sample.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 import sample.StringResourse;
-import sample.TheoryText;
 
-import java.awt.*;
-
-
-public class TheoryController {
+public class ExamplesController {
 
     private Controller controller = new Controller();
 
@@ -34,35 +18,19 @@ public class TheoryController {
     Menu menuModels, menuTheory, menuExamples, menuLanguage;
     @FXML
     MenuItem greenbergItem, greenbergTheory, rusLangItem, enLangItem;
-    @FXML
-    ImageView image;
-    @FXML
-    MenuBar menuBar;
-    @FXML
-    VBox vBox;
-    @FXML
-    ScrollPane scrollPane;
 
     @FXML
     void initialize() {
         if(lang == langEng){
             changeToEng();
         }
-        scrollPane.setFitToHeight(true);
-        scrollPane.setFitToWidth(true);
-
-        image.setFitHeight(scrollPane.getHeight());
-        image.setFitWidth(scrollPane.getWidth());
     }
 
-
-    //!!!!!!!!!!!!CHANGING LANG BLOCK!!!!!!!!!!!!!!!!!!!!
     @FXML
     private void changeToRus(){
         lang = "rus";
         changeLang();
     }
-
     @FXML
     private void changeToEng(){
         lang = langEng;
@@ -79,12 +47,8 @@ public class TheoryController {
         rusLangItem.setText(langResourse.getRusText(lang));
         enLangItem.setText(langResourse.getEngText(lang));
     }
-    //!!!!!!!!!!!END OF CHANGING LANG BLOCK!!!!!!!!!!!!!!
 
 
-
-    //!!!!!!!!!!!!!!!SWITCH TO ANOTHER SCENE!!!!!!!!!!!!!!!!!!!!!
-    //!!!!!!!!!!!!!!!SWITCH TO GREENBERG MODELS CHART!!!!!!!!!!!!
     @FXML
     private void switchToGreenbergModelsChart() throws Exception{
         Controller.setLang(lang);
@@ -93,9 +57,10 @@ public class TheoryController {
     }
 
     @FXML
-    private void switchToExamples() throws Exception{
+    private void switchToGreenbergModelsTheory() throws Exception{
         Controller.setLang(lang);
-        controller.switchToExamples();
+        controller.switchToGreenbergModelsTheory();
     }
+
 
 }

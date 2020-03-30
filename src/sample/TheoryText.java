@@ -1,5 +1,9 @@
 package sample;
 
+import org.scilab.forge.jlatexmath.TeXConstants;
+import org.scilab.forge.jlatexmath.TeXFormula;
+import org.scilab.forge.jlatexmath.TeXIcon;
+
 public class TheoryText {
 
     final private String greenbergModelText = "Транспортный поток можно рассматривать как поток одномерной\n" +
@@ -11,6 +15,11 @@ public class TheoryText {
             "сти потока.\n" +
             "Плотность автомобилей \uF072(x, t), x \uF0CE R в момент времени t \uF0B3 0. Число ав" +
             "томобилей в интервале (x1, x2) в момент времени t равно:";
+
+    TeXFormula formula = new TeXFormula();
+    TeXIcon teXIcon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);
+
+
 
     public String getGreenbergModelText() {
 

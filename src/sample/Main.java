@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sample.controllers.Controller;
+import sample.controllers.ModelsController;
 
 public class Main extends Application {
 
@@ -14,7 +15,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("screen_interfaces/interface.fxml"));
         primaryStage.setTitle("Traffic Flow Models");
         Scene scene = new Scene(root);
-        Controller.scene = scene;
+        Controller.setScene(scene);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
