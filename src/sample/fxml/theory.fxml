@@ -9,24 +9,31 @@
         <MenuBar fx:id="menuBar">
             <Menu fx:id="menuModels" text="Модели">
                 <MenuItem fx:id="greenbergItem" onAction="#switchToGreenbergModelsChart" text="Модели Гринберга" />
+                <MenuItem fx:id="lwrItem" onAction="#switchToLWRChart" text="LWR Модель" />
             </Menu>
             <Menu fx:id="menuTheory" text="Теория">
-                <MenuItem fx:id="greenbergTheory" text="Модели Гринберга" />
+                <MenuItem fx:id="greenbergTheory" onAction="#switchToGreenbergTheory" text="Модели Гринберга" />
+                <MenuItem fx:id="lwrTheory" onAction="#switchToLWRTheory" text="LWR модель" />
             </Menu>
             <Menu fx:id="menuExamples" text="Примеры">
-                <MenuItem onAction="#switchToExamples" text="Пример 1" />
+                <MenuItem fx:id="standardConditions" onAction="#switchToStandardConditions" text="Нормальные условия" />
+                <MenuItem fx:id="wetAsphalt" onAction="#switchToWetAsphalt" text="При мокром асфальте" />
+                <MenuItem fx:id="iceCondition" onAction="#switchToIceCondition" text="При гололёде" />
             </Menu>
             <Menu fx:id="menuLanguage" text="Язык">
                 <MenuItem fx:id="rusLangItem" onAction="#changeToRus" text="Русский" />
                 <MenuItem fx:id="enLangItem" onAction="#changeToEng" text="Английский" />
             </Menu>
         </MenuBar>
-      <ScrollPane fx:id="scrollPane" prefHeight="400.0" prefWidth="200.0">
-            <ImageView fx:id="image" fitHeight="336.0" fitWidth="381.0" pickOnBounds="true" smooth="false">
+
+        <ScrollPane fx:id="scrollPane" prefHeight="400.0" prefWidth="200.0" fitToHeight="true" fitToWidth="true">
+            <StackPane >
+            <ImageView fx:id="image" fitHeight="336.0" fitWidth="381.0" pickOnBounds="true" smooth="false" preserveRatio="true">
                <image>
-                  <Image url="@../tp.jpg" />
+                  <Image url="@../resources/tp.jpg" />
                </image>
             </ImageView>
+            </StackPane>
       </ScrollPane>
 
 

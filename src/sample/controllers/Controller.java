@@ -12,6 +12,7 @@ public class Controller {
     //Scene building variables
     private static Scene scene;
     private static String sceneModel;
+    private static String sceneTheory;
 
     //Lang changing variables
     private final static String langRus = "rus";
@@ -38,6 +39,15 @@ public class Controller {
     public String getSceneModel() {
         return sceneModel;
     }
+
+    public static void setSceneTheory(String sceneTheory){
+        Controller.sceneTheory = sceneTheory;
+    }
+
+    public String getSceneTheory() {
+        return sceneTheory;
+    }
+
     //!!!!!!!!!END
 
     //!!!!!!!SETTERS AND GETTERS FOR CHANGING LANGUAGE
@@ -62,22 +72,15 @@ public class Controller {
 
     //!!!!!!!!!!SWITCH TO ANOTHER SCENE BLOCK!!!!!!!!!!!!!
 
-    //!!!!!!!!!SWITCH TO EXAMPLES SCENE
-    public void switchToExamples() throws Exception{
-        loadFXMLScene();
-        sceneController.activate("examples");
-    }
-    //END
-
     //!!!!!!!!!SWITCH TO GREENBERG MODELS CHART SCENE
-    public void switchToGreenbergModelsChart() throws  Exception{
+    public void switchToInterface() throws  Exception{
         loadFXMLScene();
         sceneController.activate("interface");
     }
     //END
 
     //!!!!!!!!!SWITCH TO GREENBERG MODELS THEORY SCENE
-    public void switchToGreenbergModelsTheory() throws Exception{
+    public void switchToTheory() throws Exception{
         loadFXMLScene();
         sceneController.activate("theory");
     }
@@ -87,9 +90,8 @@ public class Controller {
     //!!!!!!!!!!!LOAD FXML FOR SHOW SCENE
     private void loadFXMLScene() throws Exception{
         sceneController = new SceneController(scene);
-        sceneController.addScene("examples", FXMLLoader.load(getClass().getResource("../screen_interfaces/examples.fxml")));
-        sceneController.addScene("theory", FXMLLoader.load(getClass().getResource("../screen_interfaces/theory.fxml")));
-        sceneController.addScene("interface", FXMLLoader.load(getClass().getResource("../screen_interfaces/interface.fxml")));
+        sceneController.addScene("theory", FXMLLoader.load(getClass().getResource("../fxml/theory.fxml")));
+        sceneController.addScene("interface", FXMLLoader.load(getClass().getResource("../fxml/interface.fxml")));
 
     }
     //END

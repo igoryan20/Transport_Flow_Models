@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="vBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0"
+      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="sample.controllers.ModelsController">
+   <children>
+       <MenuBar fx:id="menuBar" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0">
+           <Menu fx:id="menuModels" text="Модели">
+               <MenuItem fx:id="greenbergItem" onAction="#switchToGreenbergModels" text="Модели Гринберга" />
+               <MenuItem fx:id="lwrItem" onAction="#switchToLWRModel" text="LWR Модель" />
+           </Menu>
+           <Menu fx:id="menuTheory" text="Теория">
+               <MenuItem fx:id="greenbergTheory" onAction="#switchToTheory" text="Модели Гринберга" />
+               <MenuItem fx:id="lwrTheory" onAction="#switchToLWRTheory" text="LWR Модель" />
+           </Menu>
+           <Menu fx:id="menuExamples" text="Примеры">
+               <MenuItem fx:id="standardConditions" onAction="#switchToStandardConditions" text="Нормальные условия" />
+               <MenuItem fx:id="wetAsphalt" onAction="#switchToWetAsphalt" text="При мокром асфальте" />
+               <MenuItem fx:id="iceCondition" onAction="#switchToIceCondition" text="При гололёде" />
+           </Menu>
+           <Menu fx:id="menuLanguage" text="Язык">
+               <MenuItem fx:id="rusLangItem" onAction="#changeToRus" text="Русский" />
+               <MenuItem fx:id="enLangItem" onAction="#changeToEng" text="Английский" />
+           </Menu>
+       </MenuBar>
+      <LineChart id="lwr_model_chart" fx:id="lwr_model_chart" stylesheets="@../chart-line-symbol.css" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
+        <xAxis>
+          <NumberAxis side="BOTTOM" fx:id="xAxis" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis fx:id="yAxis" side="LEFT" />
+        </yAxis>
+         <effect>
+            <Blend />
+         </effect>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+         <GridPane.margin>
+            <Insets />
+         </GridPane.margin>
+      </LineChart>
+       <GridPane fx:id="gridPane" visible="false">
+           <Label fx:id="vehicleLengthLabel" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <GridPane.margin>
+               <Insets left="20.0" />
+            </GridPane.margin></Label>
+           <Label fx:id="driverTimeReactionLabel" GridPane.columnIndex="1" GridPane.rowIndex="0">
+            <GridPane.margin>
+               <Insets left="20.0" right="19.0" />
+            </GridPane.margin></Label>
+           <Label fx:id="brakeDistanceCoefLabel" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+           <Slider fx:id="vehicleLengthSlider" onMouseDragged="#changeLengthVehicle" majorTickUnit="2" max="10" min="4" minorTickCount="1" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="20.0" />
+            </GridPane.margin></Slider>
+           <Slider fx:id="driverTimeReactionSlider" onMouseDragged="#changeDriverReaction"  majorTickUnit="1.0" max="2.04" min="0.17" minorTickCount="2" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="20.0" right="20.0" />
+            </GridPane.margin></Slider>
+           <Slider fx:id="brakeDistanceCoefSlider" onMouseDragged="#changeBrakeDistanceCoef" majorTickUnit="0.02" max="0.165" min="0.0285" minorTickCount="2" showTickLabels="true" showTickMarks="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+       </GridPane>
+   </children>
+</VBox>

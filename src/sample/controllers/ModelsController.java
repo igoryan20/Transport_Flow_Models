@@ -3,17 +3,15 @@ package sample.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import sample.StringResourse;
-import sample.TheoryText;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import sample.resources.StringResource;
 
 public class ModelsController {
 
@@ -26,7 +24,10 @@ public class ModelsController {
     @FXML
     Menu menuModels, menuTheory, menuExamples, menuLanguage;
     @FXML
-    MenuItem greenbergItem, greenbergTheory, rusLangItem, enLangItem;
+    MenuItem greenbergItem, greenbergTheory, lwrItem, lwrTheory, rusLangItem, enLangItem,
+    standardConditions, wetAsphalt, iceCondition;
+    @FXML
+    VBox vBox;
 
     private Controller controller = new Controller();
 
@@ -35,15 +36,28 @@ public class ModelsController {
 
 
     public static String lang;
-    private StringResourse langResourse = new StringResourse();
+    private StringResource langResourse = new StringResource();
 
-    private final double maxSpeed = 300;
-    private final double maxDensity = 250;
+    private final double maxSpeed = 50;
+    private final double maxDensity = 0.3;
 
+    @FXML
+    private GridPane gridPane;
+    @FXML
+    private Slider vehicleLengthSlider;
+    @FXML
+    private Slider driverTimeReactionSlider;
+    @FXML
+    private Slider brakeDistanceCoefSlider;
+    @FXML
+    private Label vehicleLengthLabel;
+    @FXML
+    private Label driverTimeReactionLabel;
+    @FXML
+    private Label brakeDistanceCoefLabel;
 
-
-    private double averageVehicleLength;
-    private double driverTimeReaction = 0.504;
+    private double averageVehicleLength = 4.0;
+    private double driverTimeReaction = 0.17;
     private double brakeDistanceCoef = 0.0285;
 
     ObservableList<XYChart.Series> seriesList;
@@ -55,12 +69,10 @@ public class ModelsController {
         sceneModel = controller.getSceneModel();
         lang = controller.getLang();
 
-        if(sceneModel == "GM"){
-            buildGreenbergModels();
-        }
         if(lang == controller.getLangEng()){
             changeToEng();
         }
+        chooseModelScene();
     }
 
     //!!!!!!!!!!!!!!START MODELS BLOCK!!!!!!!!!!!!!!
@@ -90,20 +102,18 @@ public class ModelsController {
     //getDataForLinearGreenbergModel
     private ObservableList<XYChart.Data> linearModel(){
         ObservableList<XYChart.Data> linearModelList = FXCollections.observableArrayList();
-        double dencity = 0;
-        double speed = 0;
-        for(dencity = 0; dencity <= maxDensity; dencity++){
+        double dencity;
+        double speed;
+        for(dencity = 0; dencity <= maxDensity; dencity += 0.01){
             if(dencity == 0){
                 speed = maxSpeed;
-            } else if(dencity == maxDensity){
-                speed = 0;
             } else {
-                speed = maxSpeed*dencity*( 1-(dencity/maxDensity) );
+                speed = maxSpeed*( 1-(dencity/maxDensity) );
                 if(speed > maxSpeed){
                     speed = maxSpeed;
                 }
             }
-            linearModelList.add(new XYChart.Data(speed, dencity));
+            linearModelList.add(new XYChart.Data(dencity, speed));
         }
 
         return linearModelList;
@@ -113,53 +123,114 @@ public class ModelsController {
     private ObservableList<XYChart.Data> nonlinearModel(){
 
         ObservableList<XYChart.Data> nonlinearModelList = FXCollections.observableArrayList();
-        double dencity = 0;
-        double speed = 0;
-        for(dencity = 0; dencity < maxDensity; dencity++){
+        double dencity;
+        double speed;
+        for(dencity = 0; dencity < maxDensity; dencity += 0.01){
             if(dencity == 0){
-                nonlinearModelList.add(new XYChart.Data(maxSpeed, dencity));
+                nonlinearModelList.add(new XYChart.Data(dencity, maxSpeed));
             } else {
                 speed = maxSpeed * Math.log(maxDensity / dencity);
-                if(speed > maxSpeed){
-                    nonlinearModelList.add(new XYChart.Data(maxSpeed, dencity));
-                } else {
-                    nonlinearModelList.add(new XYChart.Data(speed, dencity));
-                }
+                nonlinearModelList.add(new XYChart.Data(dencity, speed));
+
             }
+
         }
         return nonlinearModelList;
     }
     //!!!!!!!!!!!THE END OF BUILDING GREENBERG MODELS BLOCK!!!!!!!!!!!
 
-    //    //LWR model
-//    @FXML
-//    public void buildLWR(){
-//        averageVehicleLength = 5.7;
-//
-//        ObservableList<XYChart.Data> speedDensityDependency = FXCollections.observableArrayList();
-//
-//        for (speed = 0; speed < maxSpeed; speed++){
-//            if(speed == 0){
-//                dencity = 1/averageVehicleLength;
-//            } else {
-//                dencity = (1 / (averageVehicleLength + driverTimeReaction * speed + brakeDistanceCoef* (Math.pow(speed, 2))));
-//            }
-//            speedDensityDependency.add(new XYChart.Data(speed, dencity));
-//        }
-//
-//
-//        seriesList.add(new XYChart.Series("Speed Density Dependency", speedDensityDependency));
-//
-//
-//        lwr_model_chart.setData(seriesList);
-//    }
+    //LWR model
+    @FXML
+    public void buildLWR(boolean visible){
+        gridPane.setVisible(visible);
 
+        vehicleLengthLabel.setText(String.format(langResourse.getVehicleLength(lang) + " %.2f", vehicleLengthSlider.getValue()));
+        driverTimeReactionLabel.setText(String.format(langResourse.getDriverTimeReaction(lang) + " %.2f",driverTimeReactionSlider.getValue()));
+        brakeDistanceCoefLabel.setText(String.format(langResourse.getBrakeDistanceCoef(lang) + " %.2f", brakeDistanceCoefSlider.getValue()));
+
+        seriesList = FXCollections.observableArrayList();
+        ObservableList<XYChart.Data> densitySpeedDependency = FXCollections.observableArrayList();
+        ObservableList<XYChart.Data> intensitySpeedDependency = FXCollections.observableArrayList();
+
+        densitySpeedDependency = LWRDensity( true);
+        intensitySpeedDependency = LWRDensity( false);
+
+        seriesList.add(new XYChart.Series(langResourse.getDensity(lang), densitySpeedDependency));
+        seriesList.add(new XYChart.Series(langResourse.getIntensity(lang), intensitySpeedDependency));
+
+        yAxis.setLabel("");
+        xAxis.setLabel(langResourse.getSpeed(lang));
+
+        lwr_model_chart.setTitle(langResourse.getModelTitle("l", lang));
+
+        if(sceneModel == "SC") {
+            lwr_model_chart.setTitle(langResourse.getStandardConditionsTitle(lang));
+        }
+        if (sceneModel == "WA"){
+            lwr_model_chart.setTitle(langResourse.getWetAsphaltTitle(lang));
+        }
+        if (sceneModel == "IC"){
+            lwr_model_chart.setTitle(langResourse.getIceConditionTitle(lang));
+        }
+        lwr_model_chart.setCreateSymbols(false);
+        lwr_model_chart.setData(seriesList);
+
+        if(sceneModel != "SC" && sceneModel != "WA" && sceneModel != "IC"){
+            Controller.setSceneModel("LWR");
+        }
+        sceneModel = controller.getSceneModel();
+    }
+
+    private ObservableList<XYChart.Data> LWRDensity(boolean boolDensity){
+        ObservableList<XYChart.Data> LWRList = FXCollections.observableArrayList();
+        double density;
+        double intensity;
+        double speed;
+        for(speed = 0; speed < maxSpeed; speed++){
+            density = 1 / (averageVehicleLength + driverTimeReaction*speed + brakeDistanceCoef*(Math.pow(speed, 2)));
+            if(boolDensity) {
+                    LWRList.add(new XYChart.Data(speed, density));
+            } else {
+                intensity = speed*density;
+                LWRList.add(new XYChart.Data(speed, intensity));
+            }
+        }
+        return LWRList;
+    }
+
+
+    @FXML
+    private void changeLengthVehicle(){
+        averageVehicleLength = vehicleLengthSlider.getValue();
+        if(sceneModel == "LWR") {
+            buildLWR(true);
+        }
+//        if(sceneModel == "combine"){
+//            buildCombineModel();
+//        }
+    }
+
+    @FXML
+    private void changeDriverReaction(){
+        driverTimeReaction = driverTimeReactionSlider.getValue();
+        if(sceneModel == "LWR") {
+            buildLWR(true);
+        }
+    }
+
+    @FXML
+    private void changeBrakeDistanceCoef(){
+        brakeDistanceCoef = brakeDistanceCoefSlider.getValue();
+        if(sceneModel == "LWR") {
+            buildLWR(true);
+        }
+    }
 
 
     //!!!!!!!!!!CHANGING LANGUAGE BLOCK!!!!!!!!!!!
     @FXML
     private void changeToRus(){
-        lang = "rus";
+        lang = controller.getLangRus();
         changeLang();
     }
 
@@ -170,37 +241,135 @@ public class ModelsController {
     }
 
     private void changeLang(){
+        chooseModelScene();
 
-        if(sceneModel == "GM"){
-            buildGreenbergModels();
-        }
-
+        ((Stage) scene.getWindow()).setTitle(langResourse.getTitle(lang));
         menuModels.setText(langResourse.getModels(lang));
         menuTheory.setText(langResourse.getTheory(lang));
         menuExamples.setText(langResourse.getExamples(lang));
         menuLanguage.setText(langResourse.getLanguage(lang));
+
         greenbergItem.setText(langResourse.getModelTitle("g", lang));
         greenbergTheory.setText(langResourse.getModelTitle("g", lang));
+
+        lwrItem.setText(langResourse.getModelTitle("l", lang));
+        lwrTheory.setText(langResourse.getModelTitle("l", lang));
+
+        standardConditions.setText(langResourse.getStandardConditionsTitle(lang));
+        wetAsphalt.setText(langResourse.getWetAsphaltTitle(lang));
+        iceCondition.setText(langResourse.getIceConditionTitle(lang));
+
         rusLangItem.setText(langResourse.getRusText(lang));
         enLangItem.setText(langResourse.getEngText(lang));
     }
     //THE END OF CHANGING LANGUAGE BLOCK!!!!!!!!!!!!!!
 
 
+    @FXML
+    private void switchToGreenbergModels(){
+        Controller.setSceneModel("GM");
+        buildGreenbergModels();
+    }
+
+    @FXML
+    private void switchToLWRModel(){
+        Controller.setSceneModel("LWR");
+        sceneModel = controller.getSceneModel();
+        setMinParameters();
+        buildLWRVisible();
+    }
+
+
     //!!!!!!!!!!!!!!!SWITCH TO ANOTHER SCENE!!!!!!!!!!!!!!!!!!!!!
     //!!!!!!!!!!!!!!!SWITCH TO MATH THEORY OF MODEL BLOCK!!!!!!!!!!!!!!!!!
     @FXML
-    public void swithcToGreenbergModelsTheory() throws Exception {
+    private void switchToTheory() throws Exception {
         Controller.setLang(lang);
-        controller.switchToGreenbergModelsTheory();
+        Controller.setSceneTheory("GM");
+        controller.switchToTheory();
     }
 
 
     //!!!!!!!!!!!!!SWITCH TO MODEL EXAMPLES!!!!!!!!!!!!!!!!!!!
+
     @FXML
-    public void switchToExamples() throws Exception{
+    private void switchToLWRTheory() throws Exception{
         Controller.setLang(lang);
-        controller.switchToExamples();
+        Controller.setSceneTheory("LWR");
+        controller.switchToTheory();
+    }
+
+    @FXML
+    private void switchToStandardConditions() throws Exception{
+        Controller.setSceneModel("SC");
+        sceneModel = controller.getSceneModel();
+        buildStandardConditions();
+    }
+
+    @FXML
+    private void switchToWetAsphalt() throws Exception{
+        Controller.setSceneModel("WA");
+        sceneModel = controller.getSceneModel();
+        buildWetAsphalt();
+    }
+
+    @FXML
+     private void switchToIceCondition() throws Exception{
+        Controller.setSceneModel("IC");
+        sceneModel = controller.getSceneModel();
+        buildIceCondition();
+    }
+
+    private void buildStandardConditions(){
+        averageVehicleLength = 5.7;
+        driverTimeReaction = 0.504;
+        brakeDistanceCoef = 0.0285;
+        buildLWR(false);
+    }
+
+    private void buildWetAsphalt(){
+        averageVehicleLength = 5.7;
+        driverTimeReaction = 0.504;
+        brakeDistanceCoef = 0.0570;
+        buildLWR(false);
+    }
+
+    private void buildIceCondition(){
+        averageVehicleLength = 5.7;
+        driverTimeReaction = 0.504;
+        brakeDistanceCoef = 0.165;
+        buildLWR(false);
+    }
+
+    @FXML
+    private void buildLWRVisible(){
+        buildLWR(true);
+    }
+
+    private void chooseModelScene() {
+        switch (sceneModel) {
+            case "GM":
+                buildGreenbergModels();
+                break;
+            case "SC":
+                buildStandardConditions();
+                break;
+            case "WA":
+                buildWetAsphalt();
+                break;
+            case "IC":
+                buildIceCondition();
+                break;
+            case "LWR":
+                buildLWRVisible();
+                break;
+        }
+    }
+
+    private void setMinParameters(){
+        averageVehicleLength = 4.0;
+        driverTimeReaction = 0.17;
+        brakeDistanceCoef = 0.03;
     }
 
 }
